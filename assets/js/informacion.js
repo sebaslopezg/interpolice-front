@@ -20,6 +20,7 @@ btnRegistrar.addEventListener('click', ()=>{
 
 btnNuevoCiudadano.addEventListener('click', ()=>{
     $('#registroModal').modal('show')
+    fntClearForm()
 })
 
 document.addEventListener('click', (e)=>{
@@ -42,20 +43,18 @@ document.addEventListener('click', (e)=>{
 })
 
 function fntRegistrar(){
-    let nombreEntidad = document.querySelector('#nombreEntidad')
-    let apellidoEntidad = document.querySelector('#apellidoEntidad')
-    let emailEntidad = document.querySelector('#emailEntidad')
-    let apodoEntidad = document.querySelector('#apodoEntidad')
-    let fechaEntidad = document.querySelector('#fechaEntidad')
+
     fetch(BASE_URL+'/api/ciudadano/crear',{
         method: "POST",
         headers: {
             "Content-Type": "application/json",
           },
         body: JSON.stringify({
-            nombre: nombreEntidad.value,
-            apellido: apellidoEntidad.value,
-            fecha_nacimiento: fechaEntidad.value,
+            email:frmEmailEntidad.value,
+            nombre: frmNombreEntidad.value,
+            apellido: frmApellidoEntidad.value,
+            apodo:frmApellidoEntidad.value,
+            fecha_nacimiento: frmFechaEntidad.value,
             categoria_id_categoria: 1
         })
     })
@@ -118,10 +117,21 @@ function fntEdit(id){
     .then((json) => {
         data = json.datos[0]
         console.log(data)
+        frmEmailEntidad.value = data.email
         frmNombreEntidad.value = data.nombre
         frmApellidoEntidad.value = data.apellido
+        frmApodoEntidad.value = data.apodo
         frmFechaEntidad.value = data.fecha_nacimiento
         frmIdEntidad.value = data.id_ciudadanos
 
     })
+}
+
+function fntClearForm(){
+    frmEmailEntidad.value = ""
+    frmNombreEntidad.value = ""
+    frmApellidoEntidad.value = ""
+    frmApodoEntidad.value = ""
+    frmFechaEntidad.value = ""
+    frmIdEntidad.value = ""
 }
