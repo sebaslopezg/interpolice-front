@@ -3,6 +3,13 @@ const btnRegistrar = document.querySelector('#btnRegistrar')
 const btnNuevoCiudadano = document.querySelector('#btnNuevoCiudadano')
 const registroModal = document.querySelector('#registroModal')
 
+const frmNombreEntidad = document.querySelector('#nombreEntidad')
+const frmApellidoEntidad = document.querySelector('#apellidoEntidad')
+const frmApodoEntidad = document.querySelector('#apodoEntidad')
+const frmEmailEntidad = document.querySelector('#emailEntidad')
+const frmFechaEntidad = document.querySelector('#fechaEntidad')
+const frmIdEntidad = document.querySelector('#idEntidad')
+
 fntListar()
 
 window.addEventListener('submit', (e)=>e.preventDefault())
@@ -25,7 +32,7 @@ document.addEventListener('click', (e)=>{
             fntEliminar(ciudadanoId)
             fntListar()
         }
-
+        
         if (accion == 'update') {
             fntEdit(ciudadanoId)
             $('#registroModal').modal('show')
@@ -38,8 +45,8 @@ function fntRegistrar(){
     let nombreEntidad = document.querySelector('#nombreEntidad')
     let apellidoEntidad = document.querySelector('#apellidoEntidad')
     let emailEntidad = document.querySelector('#emailEntidad')
+    let apodoEntidad = document.querySelector('#apodoEntidad')
     let fechaEntidad = document.querySelector('#fechaEntidad')
-    console.log(fechaEntidad.value)
     fetch(BASE_URL+'/api/ciudadano/crear',{
         method: "POST",
         headers: {
@@ -62,6 +69,7 @@ function fntRegistrar(){
         })
         if (data.status) {
             $('#registroModal').modal('hide')
+            fntListar()
         }
     })
 
@@ -71,7 +79,7 @@ function fntRegistrar(){
 
 function fntEliminar(id){
 
-    fetch(`http://localhost:4100/api/ciudadano/borrarporid/${id}`,{
+    fetch(`${BASE_URL}/api/ciudadano/borrarporid/${id}`,{
         method: "DELETE"
     })
     .then((res) => res.json())
@@ -80,14 +88,14 @@ function fntEliminar(id){
 
 function fntListar(){
 
-    fetch('http://localhost:4100/api/ciudadano/listartodos')
+    fetch(BASE_URL + '/api/ciudadano/listartodos')
     .then((res)=> res.json())
     .then((data) => {
         data = data.datos
         console.log(data)
-        tabla.innerHTML = ""
+        html = ""
         data.forEach(el => {
-            tabla.innerHTML += `
+            html += `
             <tr>
                 <td scope="row">${el.id_ciudadanos}</td>
                 <td>${el.nombre}</td>
@@ -100,9 +108,20 @@ function fntListar(){
             </tr>
             `
         })
+        tabla.innerHTML = html
     })
 }
 
 function fntEdit(id){
-    fetch(`http://localhost:4100/api/ciudadano/listarporid/:id`)
+    fetch(`${BASE_URL}/api/ciudadano/listarporid/${id}`)
+    .then((res) => res.json())
+    .then((json) => {
+        data = json.datos[0]
+        console.log(data)
+        frmNombreEntidad.value = data.nombre
+        frmApellidoEntidad.value = data.apellido
+        frmFechaEntidad.value = data.fecha_nacimiento
+        frmIdEntidad.value = data.id_ciudadanos
+
+    })
 }
