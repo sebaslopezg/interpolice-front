@@ -23,6 +23,9 @@
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title">Lista de grados de cada delito</h5>
+                  <button id="btnNuevoRegistro" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Nuevo Registro
+                  </button>
                   <table class="table table-striped">
                     <thead>
                       <tr>
@@ -45,13 +48,13 @@
         <div class="modal-dialog modal-xl">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Registrar Ciudadano</h5>
+              <h5 class="modal-title" id="exampleModalLabel">Registrar Delito</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
       
               <form id="frmRegistroEntidad">
-                <input type="hidden" id="idEntidad" name="idEntidad">
+                <input type="hidden" id="idgadoDelito">
                 <div class="mb-3">
                   <label for="nombreEntidad" class="form-label">Nombre del delito</label>
                   <input type="text" class="form-control" id="txtNombreDelito" aria-describedby="emailHelp">

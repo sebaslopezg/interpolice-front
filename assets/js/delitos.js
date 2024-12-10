@@ -5,6 +5,8 @@ const txtDescripcionDelito = document.querySelector('#txtDescripcionDelito')
 const gradoDelito = document.querySelector('#gradoDelito')
 const btnRegistrar = document.querySelector('#btnRegistrar')
 const idDelito = document.querySelector('#idDelito')
+let idregistro
+let estaEditando
 
 fntListar()
 
@@ -16,23 +18,24 @@ btnNuevoDelito.addEventListener('click', ()=>{
 })
 
 btnRegistrar.addEventListener('click', ()=>{
-    fntRegistrar()
+    estaEditando ? fntActualizar(idregistro) : fntRegistrar()
 })
 
 document.addEventListener('click', (e)=>{
     try {
         let btn = e.target.closest("button")
         let accion = btn.getAttribute("data-action")
-        let delitoId = btn.getAttribute("data-delito-id")
+        let id = btn.getAttribute("data-delito-id")
 
         if (accion == 'delete') {
-            fntEliminar(delitoId)
+            fntEliminar(id)
             fntListar()
         }
         
         if (accion == 'update') {
-            fntEdit(delitoId)
+            fntEdit(id)
             $('#registroModal').modal('show')
+            idregistro = id
         }
 
     } catch (error) {}
@@ -44,7 +47,6 @@ function fntListar(){
     .then((res)=> res.json())
     .then((data) => {
         data = data.datos
-        console.log(data)
         html = ""
         data.forEach(el => {
             html += `
@@ -79,7 +81,6 @@ function fntRegistrar(){
     })
     .then((res) => res.json())
     .then((data) => {
-        console.log(data)
         Swal.fire({
             title: data.status ? "Registro insertado" : "Error",
             text: data.mensaje,
@@ -92,13 +93,47 @@ function fntRegistrar(){
     })
 }
 
+function fntActualizar(id){
+
+    fetch(BASE_URL+`/api/delitos/editarporid/${id}`,{
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+          },
+        body: JSON.stringify({
+            nombre_delito:txtNombreDelito.value,
+            descripcion_delito:txtDescripcionDelito.value,
+            grados_delitos_id_grado_delito:gradoDelito.value
+        })
+    })
+    .then((res) => res.json())
+    .then((data) => {
+        Swal.fire({
+            title: data.status ? "Registro actualizado" : "Error",
+            text: data.mensaje,
+            icon: data.status ? "success" : "error"
+        })
+        if (data.status) {
+            $('#registroModal').modal('hide')
+            fntListar()
+            estaEditando = false
+        }
+    })
+}
+
 function fntEliminar(id){
 
     fetch(`${BASE_URL}/api/delitos/borrarporid/${id}`,{
         method: "DELETE"
     })
     .then((res) => res.json())
-    .then((data) => console.log(data)) 
+    .then((data) => {
+        Swal.fire({
+            title: data.status ? "Registro insertado" : "Error",
+            text: data.mensaje,
+            icon: data.status ? "success" : "error"
+        })
+    }) 
 }
 
 function fntEdit(id){
@@ -106,13 +141,12 @@ function fntEdit(id){
     .then((res) => res.json())
     .then((json) => {
         data = json.datos[0]
-        console.log(data)
-        idDelito.value = id_delito
         txtNombreDelito.value = data.nombre_delito
         txtDescripcionDelito.value = data.descripcion_delito
         gradoDelito.value = data.grados_delitos_id_grado_delito
 
     })
+    estaEditando = true
 }
 
 function fntClearForm(){

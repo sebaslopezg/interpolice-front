@@ -9,13 +9,16 @@ const frmApodoEntidad = document.querySelector('#apodoEntidad')
 const frmEmailEntidad = document.querySelector('#emailEntidad')
 const frmFechaEntidad = document.querySelector('#fechaEntidad')
 const frmIdEntidad = document.querySelector('#idEntidad')
+let estaEditando = false
+let idregistro
 
 fntListar()
 
 window.addEventListener('submit', (e)=>e.preventDefault())
 
 btnRegistrar.addEventListener('click', ()=>{
-    fntRegistrar()
+    estaEditando ? fntActualizar(idregistro) : fntRegistrar()
+    console.log(idregistro)
 })
 
 btnNuevoCiudadano.addEventListener('click', ()=>{
@@ -37,6 +40,7 @@ document.addEventListener('click', (e)=>{
         if (accion == 'update') {
             fntEdit(ciudadanoId)
             $('#registroModal').modal('show')
+            idregistro = ciudadanoId
         }
 
     } catch (error) {}
@@ -71,9 +75,38 @@ function fntRegistrar(){
             fntListar()
         }
     })
+}
 
+function fntActualizar(id){
 
-
+    fetch(BASE_URL+`/api/ciudadano/editarporid/${id}`,{
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+          },
+        body: JSON.stringify({
+            email:frmEmailEntidad.value,
+            nombre: frmNombreEntidad.value,
+            apellido: frmApellidoEntidad.value,
+            apodo:frmApellidoEntidad.value,
+            fecha_nacimiento: frmFechaEntidad.value,
+            categoria_id_categoria: 1
+        })
+    })
+    .then((res) => res.json())
+    .then((data) => {
+        console.log(data)
+        Swal.fire({
+            title: data.status ? "Registro actualizado" : "Error",
+            text: data.mensaje,
+            icon: data.status ? "success" : "error"
+        })
+        if (data.status) {
+            $('#registroModal').modal('hide')
+            fntListar()
+            estaEditando = false
+        }
+    })
 }
 
 function fntEliminar(id){
@@ -125,6 +158,7 @@ function fntEdit(id){
         frmIdEntidad.value = data.id_ciudadanos
 
     })
+    estaEditando = true
 }
 
 function fntClearForm(){
