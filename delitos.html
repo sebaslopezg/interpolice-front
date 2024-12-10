@@ -22,7 +22,11 @@
           
             <div class="card">
               <div class="card-body">
-                <h5 class="card-title">Lista de delitos</h5>
+                <h5 class="card-title">Lista de delitos
+                  <button id="btnNuevoDelito" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Crear Delito
+                  </button>
+                </h5>
                 <table class="table table-striped">
                   <thead>
                     <tr>
@@ -39,6 +43,51 @@
           </div>
           
         </div>
+
+
+              <!-- Modal -->
+      <div class="modal fade" id="registroModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Registrar Ciudadano</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+      
+              <form id="frmRegistroEntidad">
+                <input type="hidden" id="idDelito">
+
+                <div class="mb-3">
+                  <label for="nombreEntidad" class="form-label">Nombre Delito</label>
+                  <input type="text" class="form-control" id="txtNombreDelito">
+                </div>
+
+                <div class="mb-3">
+                  <label for="nombreEntidad" class="form-label">Descripcion</label>
+                  <input type="text" class="form-control" id="txtDescripcionDelito">
+                </div>
+
+
+                <div class="mb-3">
+                  <label for="nombreEntidad" class="form-label">Descripcion</label>
+                  <select class="form-control" id="gradoDelito">
+                    <option value="0">Seleccione un grado</option>
+                    <option value="1">Bajo</option>
+                    <option value="2">Medio</option>
+                    <option value="3">Moderado</option>
+                    <option value="3">Alto</option>
+                  </select>
+                </div>      
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button id="btnRegistrar" type="submit" class="btn btn-primary">Registrar</button>
+            </form>
+            </div>
+          </div>
+        </div>
+      </div>
 
       </main>
 
